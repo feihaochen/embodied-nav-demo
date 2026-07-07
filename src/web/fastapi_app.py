@@ -466,3 +466,6 @@ async def api_live(request: Request):
 
 
 # Robot embodiment note: wheeled dual-arm mobile manipulator, arms fixed for navigation-only task.
+
+
+# Robot embodiment note: wheeled dual-arm mobile manipulator, arms fixed for navigation-only task.

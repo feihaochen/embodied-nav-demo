@@ -10,3 +10,8 @@ dist/
 .ipynb_checkpoints/
 .DS_Store
 backups/
+
+# Local backup files
+README.backup_*.md
+*.orig.mp4
+backups/
