@@ -1,0 +1,19 @@
+# 视觉目标检测模块依赖
+# 本项目使用 OWL-ViT / Transformers 进行开放词汇目标检测。
+# 当前环境为 Windows 10 + WSL Ubuntu + RTX 2060，因此这里记录 CUDA 版 PyTorch 安装源。
+# 如果在无 GPU 环境中复现，可根据 PyTorch 官方说明改用 CPU 版本。
+
+--index-url https://download.pytorch.org/whl/cu121
+--extra-index-url https://pypi.org/simple
+
+torch==2.4.1
+torchvision==0.19.1
+numpy==1.26.4
+opencv-python==4.10.0.84
+transformers==4.44.2
+safetensors==0.4.5
+accelerate==0.34.2
+pillow
+imageio
+imageio-ffmpeg
+tqdm

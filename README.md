@@ -245,3 +245,15 @@
 - 增加更真实的轮式双臂机器人模型展示。
 - 增加只用于可视化的轨迹图。
 - 增加更丰富的在线交互部署方式。
+
+## 十四、视觉检测依赖
+
+本项目的视觉目标检测模块使用 OWL-ViT / Transformers。检测器相关依赖记录在：
+
+    requirements_detector.txt
+
+如果需要在已有 Habitat 环境中补装视觉检测依赖，可以执行：
+
+    python -m pip install -r requirements_detector.txt
+
+注意：当前项目的 Habitat-Sim 是源码编译版本，不应通过 requirements 文件重新安装 Habitat-Sim。Habitat-Sim 的环境配置请参考 README 中的已验证环境说明。
