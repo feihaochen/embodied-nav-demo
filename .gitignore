@@ -15,3 +15,8 @@ backups/
 README.backup_*.md
 *.orig.mp4
 backups/
+
+# Local backup files
+README.backup_*.md
+*.orig.mp4
+backups/

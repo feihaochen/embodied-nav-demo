@@ -144,7 +144,21 @@
     </div>
 
     <div class="card">
-      <h2>运行时输入约束</h2>
+      
+<section class="card robot-card">
+  <h2>机器人形态 / Robot Embodiment</h2>
+  <p>
+    当前 Demo 将机器人建模为 <b>轮式双臂移动机器人导航抽象</b>：
+    轮式底盘负责导航，双臂固定不参与本导航任务；第一视角 RGB-D 相机安装在机器人上。
+    当前展示聚焦导航能力，不涉及机械臂抓取或操作控制。
+  </p>
+  <p>
+    控制动作包括：
+    <code>move_forward</code>、<code>turn_left</code>、<code>turn_right</code>、<code>stop</code>。
+  </p>
+</section>
+
+<h2>运行时输入约束</h2>
       <p>机器人决策只使用：</p>
       <span class="badge">RGB 图像</span>
       <span class="badge">Depth 图像</span>

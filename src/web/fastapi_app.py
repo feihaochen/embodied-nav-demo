@@ -228,7 +228,28 @@ def index():
     </div>
 
     <div class="card">
-      <h2>Agent 输入约束</h2>
+      
+<section id="robot-embodiment" class="card" style="margin-top: 18px;">
+  <h2>机器人形态 / Robot Embodiment</h2>
+  <p>
+    当前 Demo 将机器人建模为 <b>轮式双臂移动机器人导航抽象</b>：
+    轮式移动底盘负责导航控制，双臂固定，不参与本导航任务中的动作控制。
+    第一视角 RGB-D 相机安装在机器人上，用于视觉感知。
+  </p>
+  <ul>
+    <li><b>Base:</b> wheeled mobile base</li>
+    <li><b>Arms:</b> two fixed arms, not actuated in this navigation-only task</li>
+    <li><b>Sensor:</b> first-person RGB-D camera</li>
+    <li><b>Actions:</b> <code>move_forward</code>, <code>turn_left</code>, <code>turn_right</code>, <code>stop</code></li>
+  </ul>
+  <p>
+    因为当前视频是机器人第一视角画面，所以机器人本体通常不会出现在画面中；
+    本页面和 <code>src/sim/robot_profile.py</code> 明确记录了该机器人形态。
+  </p>
+</section>
+
+
+<h2>Agent 输入约束</h2>
       <p>运行时 Agent 只使用：</p>
       <span class="badge">RGB</span>
       <span class="badge">Depth</span>
@@ -465,7 +486,4 @@ async def api_live(request: Request):
     }
 
 
-# Robot embodiment note: wheeled dual-arm mobile manipulator, arms fixed for navigation-only task.
-
-
-# Robot embodiment note: wheeled dual-arm mobile manipulator, arms fixed for navigation-only task.
+# Robot embodiment: wheeled dual-arm mobile manipulator, arms fixed for navigation-only task.
