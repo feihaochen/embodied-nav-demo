@@ -1,0 +1,21 @@
+scene=apt_1
+seed=3
+command=请到椅子旁边
+target=chair
+
+step=000 state=APPROACH action=move_forward target=chair visible=True front_depth=4.226680278778076 target_distance=3.4783315658569336 bbox=(273, 332, 369, 425) score=0.5273325443267822 reply=看到 chair，正在靠近。
+step=001 state=APPROACH action=move_forward target=chair visible=True front_depth=3.976720094680786 target_distance=3.2359724044799805 bbox=(267, 335, 369, 439) score=0.5525309443473816 reply=看到 chair，正在靠近。
+step=002 state=APPROACH action=move_forward target=chair visible=True front_depth=3.7732088565826416 target_distance=3.0034165382385254 bbox=(256, 339, 372, 451) score=0.5757259726524353 reply=看到 chair，正在靠近。
+step=003 state=APPROACH action=move_forward target=chair visible=True front_depth=3.587517499923706 target_distance=2.7384047508239746 bbox=(244, 343, 368, 468) score=0.5649791955947876 reply=看到 chair，正在靠近。
+step=004 state=APPROACH action=move_forward target=chair visible=True front_depth=3.373152256011963 target_distance=2.478067398071289 bbox=(228, 346, 363, 487) score=0.5386993288993835 reply=看到 chair，正在靠近。
+step=005 state=APPROACH action=move_forward target=chair visible=True front_depth=3.1693713665008545 target_distance=2.245788097381592 bbox=(213, 354, 365, 509) score=0.6094491481781006 reply=看到 chair，正在靠近。
+step=006 state=APPROACH action=move_forward target=chair visible=True front_depth=2.925896644592285 target_distance=2.006660223007202 bbox=(196, 360, 362, 539) score=0.6507173180580139 reply=看到 chair，正在靠近。
+step=007 state=ALIGN action=turn_left target=chair visible=True front_depth=2.6825358867645264 target_distance=1.7833008766174316 bbox=(171, 363, 362, 572) score=0.6494867205619812 reply=看到 chair，正在左转对齐。
+step=008 state=APPROACH action=move_forward target=chair visible=True front_depth=2.695941686630249 target_distance=1.8409678936004639 bbox=(290, 360, 455, 562) score=0.6381939649581909 reply=看到 chair，正在靠近。
+step=009 state=APPROACH action=move_forward target=chair visible=True front_depth=2.4532644748687744 target_distance=1.6390326023101807 bbox=(303, 361, 464, 575) score=0.5543420910835266 reply=看到 chair，正在靠近。
+step=010 state=APPROACH action=move_forward target=chair visible=True front_depth=2.21144962310791 target_distance=1.4613046646118164 bbox=(260, 372, 481, 574) score=0.6002618670463562 reply=看到 chair，正在靠近。
+step=011 state=APPROACH action=move_forward target=chair visible=True front_depth=1.9719771146774292 target_distance=1.3333320617675781 bbox=(241, 396, 500, 576) score=0.5428362488746643 reply=看到 chair，正在靠近。
+step=012 state=APPROACH action=move_forward target=chair visible=True front_depth=1.727917194366455 target_distance=1.3114349842071533 bbox=(208, 408, 518, 576) score=0.3442252278327942 reply=看到 chair，正在靠近。
+step=013 state=STOP action=stop target=chair visible=False front_depth=1.483844518661499 target_distance=None bbox=None score=None reply=已到达 chair 旁边，还需要什么？
+
+final_reply=已到达 chair 旁边，还需要什么？

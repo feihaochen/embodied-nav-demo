@@ -1,0 +1,258 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any, Dict, Optional, Protocol, Tuple
+
+import numpy as np
+
+from src.agent.command_parser import ParsedCommand
+
+
+@dataclass
+class Detection:
+    label: str
+    bbox_xyxy: Tuple[int, int, int, int]
+    score: float
+
+
+class DetectorProtocol(Protocol):
+    def detect(self, rgb: np.ndarray, target: str) -> Optional[Detection]:
+        ...
+
+
+@dataclass
+class AgentOutput:
+    action: str
+    done: bool
+    reply: str
+    debug: Dict[str, Any]
+
+
+class DepthSafeSearchAgent:
+    """
+    M1 Agent skeleton.
+
+    This version can already run inside Habitat:
+    - It parses a target command.
+    - It uses depth for basic obstacle avoidance.
+    - It rotates/searches when the target is not detected.
+    - It has a detector hook for the next milestone.
+
+    If detector is None, target_visible is always False, so it will perform
+    visual-search/exploration behavior and eventually fail gracefully.
+    """
+
+    def __init__(
+        self,
+        detector: Optional[DetectorProtocol] = None,
+        max_steps: int = 160,
+        front_obstacle_threshold_m: float = 0.55,
+        stop_distance_m: float = 1.10,
+        align_threshold: float = 0.18,
+    ):
+        self.detector = detector
+        self.max_steps = max_steps
+        self.front_obstacle_threshold_m = front_obstacle_threshold_m
+        self.stop_distance_m = stop_distance_m
+        self.align_threshold = align_threshold
+
+        self.reset()
+
+    def reset(self):
+        self.step_idx = 0
+        self.state = "IDLE"
+        self.last_detection: Optional[Detection] = None
+        self.last_reply = ""
+
+    def act(self, obs: Dict[str, Any], command: ParsedCommand) -> AgentOutput:
+        self.step_idx += 1
+
+        if not command.ok or command.target is None:
+            self.state = "ASK"
+            return AgentOutput(
+                action="stop",
+                done=True,
+                reply=command.message,
+                debug={
+                    "state": self.state,
+                    "target": None,
+                    "reason": "command_parse_failed",
+                },
+            )
+
+        rgb = obs["rgb"]
+        depth = obs["depth"]
+        target = command.target
+
+        if self.step_idx > self.max_steps:
+            self.state = "FAIL"
+            return AgentOutput(
+                action="stop",
+                done=True,
+                reply=(
+                    f"我已经搜索了一段时间，但还没有稳定找到 {target}。"
+                    "下一步需要接入目标检测模块。还需要什么？"
+                ),
+                debug={
+                    "state": self.state,
+                    "target": target,
+                    "reason": "max_steps_reached",
+                },
+            )
+
+        detection = self._detect(rgb, target)
+        front_depth = self._front_depth(depth)
+
+        if detection is not None:
+            self.last_detection = detection
+            action, done, reply, debug = self._act_with_detection(
+                detection=detection,
+                depth=depth,
+                target=target,
+                front_depth=front_depth,
+            )
+            debug.update(
+                {
+                    "step_idx": self.step_idx,
+                    "front_depth": front_depth,
+                    "target_visible": True,
+                    "bbox": detection.bbox_xyxy,
+                    "score": detection.score,
+                }
+            )
+            return AgentOutput(action=action, done=done, reply=reply, debug=debug)
+
+        # No detection yet: search / explore safely.
+        action = self._search_action(front_depth)
+
+        self.state = "SEARCH"
+        return AgentOutput(
+            action=action,
+            done=False,
+            reply=f"正在寻找 {target} ...",
+            debug={
+                "state": self.state,
+                "target": target,
+                "target_visible": False,
+                "front_depth": front_depth,
+                "action": action,
+                "step_idx": self.step_idx,
+            },
+        )
+
+    def _detect(self, rgb: np.ndarray, target: str) -> Optional[Detection]:
+        if self.detector is None:
+            return None
+        return self.detector.detect(rgb, target)
+
+    def _front_depth(self, depth: np.ndarray) -> float:
+        """
+        Estimate free space in front of robot from the center region of the depth image.
+        """
+        h, w = depth.shape[:2]
+        y1, y2 = int(0.40 * h), int(0.75 * h)
+        x1, x2 = int(0.35 * w), int(0.65 * w)
+
+        patch = depth[y1:y2, x1:x2]
+        valid = patch[np.isfinite(patch)]
+        valid = valid[(valid > 0.05) & (valid < 10.0)]
+
+        if valid.size == 0:
+            return 10.0
+
+        return float(np.median(valid))
+
+    def _search_action(self, front_depth: float) -> str:
+        """
+        Search behavior:
+        - First rotate to scan the room.
+        - Then move forward if front is clear.
+        - If blocked, rotate.
+        """
+        # One 360-degree scan if turn angle is 15 deg: 24 turns.
+        if self.step_idx <= 24:
+            return "turn_left"
+
+        if front_depth < self.front_obstacle_threshold_m:
+            return "turn_right"
+
+        # Alternate between short forward motions and rotations.
+        cycle = self.step_idx % 12
+        if cycle in [0, 1, 2, 3]:
+            return "turn_left"
+        return "move_forward"
+
+    def _act_with_detection(
+        self,
+        detection: Detection,
+        depth: np.ndarray,
+        target: str,
+        front_depth: float,
+    ):
+        h, w = depth.shape[:2]
+        x1, y1, x2, y2 = detection.bbox_xyxy
+
+        # Clamp bbox.
+        x1 = max(0, min(w - 1, int(x1)))
+        x2 = max(0, min(w, int(x2)))
+        y1 = max(0, min(h - 1, int(y1)))
+        y2 = max(0, min(h, int(y2)))
+
+        if x2 <= x1 or y2 <= y1:
+            self.state = "SEARCH"
+            return "turn_left", False, f"正在重新寻找 {target} ...", {
+                "state": self.state,
+                "reason": "invalid_bbox",
+            }
+
+        cx = 0.5 * (x1 + x2)
+        horizontal_offset = (cx - 0.5 * w) / (0.5 * w)
+
+        patch = depth[y1:y2, x1:x2]
+        valid = patch[np.isfinite(patch)]
+        valid = valid[(valid > 0.05) & (valid < 10.0)]
+        target_distance = float(np.median(valid)) if valid.size else 10.0
+
+        if target_distance <= self.stop_distance_m:
+            self.state = "STOP"
+            return "stop", True, f"已到达 {target} 旁边，还需要什么？", {
+                "state": self.state,
+                "target_distance": target_distance,
+                "horizontal_offset": horizontal_offset,
+                "action": "stop",
+            }
+
+        if horizontal_offset < -self.align_threshold:
+            self.state = "ALIGN"
+            return "turn_left", False, f"看到 {target}，正在左转对齐。", {
+                "state": self.state,
+                "target_distance": target_distance,
+                "horizontal_offset": horizontal_offset,
+                "action": "turn_left",
+            }
+
+        if horizontal_offset > self.align_threshold:
+            self.state = "ALIGN"
+            return "turn_right", False, f"看到 {target}，正在右转对齐。", {
+                "state": self.state,
+                "target_distance": target_distance,
+                "horizontal_offset": horizontal_offset,
+                "action": "turn_right",
+            }
+
+        if front_depth < self.front_obstacle_threshold_m:
+            self.state = "AVOID"
+            return "turn_right", False, f"看到 {target}，但前方有障碍，正在避障。", {
+                "state": self.state,
+                "target_distance": target_distance,
+                "horizontal_offset": horizontal_offset,
+                "action": "turn_right",
+            }
+
+        self.state = "APPROACH"
+        return "move_forward", False, f"看到 {target}，正在靠近。", {
+            "state": self.state,
+            "target_distance": target_distance,
+            "horizontal_offset": horizontal_offset,
+            "action": "move_forward",
+        }

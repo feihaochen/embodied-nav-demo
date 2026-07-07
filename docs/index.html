@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Habitat / ReplicaCAD 视觉导航机器人</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "Noto Sans SC", sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+    header {
+      padding: 32px 24px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #172554, #0f172a);
+      border-bottom: 1px solid #334155;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 30px;
+    }
+    p {
+      line-height: 1.7;
+      color: #cbd5e1;
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 18px;
+    }
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+    button {
+      background: #1d4ed8;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    button.secondary {
+      background: #0f766e;
+    }
+    video {
+      width: 100%;
+      border-radius: 14px;
+      background: black;
+      border: 1px solid #334155;
+    }
+    pre {
+      background: #020617;
+      color: #d1d5db;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 14px;
+      max-height: 520px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .reply {
+      margin: 12px 0;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #052e2b;
+      border: 1px solid #14b8a6;
+      color: #99f6e4;
+      font-weight: 800;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      margin: 3px;
+      border: 1px solid #334155;
+      border-radius: 999px;
+      background: #020617;
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+    .warn {
+      color: #fbbf24;
+    }
+    code {
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>Habitat / ReplicaCAD 语言条件 RGB-D 视觉导航机器人</h1>
+  <p>
+    用户输入“请到沙发旁边”或“请到椅子旁边”，机器人在居家仿真场景中基于第一视角 RGB-D、
+    本体状态和动作反馈执行搜索、对齐、靠近和停止。
+  </p>
+</header>
+
+<main>
+  <section class="grid">
+    <div class="card">
+      <div class="controls">
+        <button onclick="selectDemo('sofa')">沙发</button>
+        <button class="secondary" onclick="selectDemo('chair')">椅子</button>
+      </div>
+
+      <video id="video" controls playsinline src="assets/demo_sofa_768.mp4"></video>
+
+      <div id="reply" class="reply">已到达 sofa 旁边，还需要什么？</div>
+
+      <p id="meta">
+        当前目标：沙发；场景：apt_1；随机种子：5。
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>运行时输入约束</h2>
+      <p>机器人决策只使用：</p>
+      <span class="badge">RGB 图像</span>
+      <span class="badge">Depth 图像</span>
+      <span class="badge">机器人本体状态</span>
+      <span class="badge">动作反馈</span>
+      <span class="badge">用户文字命令</span>
+
+      <p>机器人决策不使用：</p>
+      <span class="badge warn">物体真值位置</span>
+      <span class="badge warn">语义传感器</span>
+      <span class="badge warn">最短路径跟随器</span>
+      <span class="badge warn">上帝视角地图</span>
+      <span class="badge warn">场景图元数据</span>
+
+      <h2>导航状态机</h2>
+      <p><code>搜索 → 对齐 → 靠近 → 停止</code></p>
+
+      <h2>系统模块</h2>
+      <p>
+        命令解析器 → 视觉目标检测器 → 深度安全导航 Agent → Habitat 仿真后端
+      </p>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:18px;">
+    <h2>状态日志</h2>
+    <pre id="log">正在加载日志...</pre>
+  </section>
+
+  <section class="card" style="margin-top:18px;">
+    <h2>说明</h2>
+    <p>
+      本页面展示的是已经验证过的缓存演示，用于稳定交付网页链接。
+      本地版本还提供 FastAPI 页面，可以触发真实的 Habitat + OWL-ViT + Agent 运行。
+    </p>
+    <p>
+      当前最终展示目标为沙发和椅子。系统接口按多目标方式设计，后续可以通过切换到包含相应物体且适合展示的场景，继续扩展到床、桌子、厨房台面等更多目标。本次提交选用已经完成验证的沙发和椅子作为主展示目标。
+    </p>
+    <p>
+      当前任务是导航任务，机器人双臂固定不参与控制。
+    </p>
+  </section>
+</main>
+
+<script>
+const demos = {
+  sofa: {
+    video: "assets/demo_sofa_768.mp4",
+    log: "assets/demo_sofa_768.txt",
+    reply: "已到达 sofa 旁边，还需要什么？",
+    meta: "当前目标：沙发；场景：apt_1；随机种子：5。"
+  },
+  chair: {
+    video: "assets/demo_chair_768.mp4",
+    log: "assets/demo_chair_768.txt",
+    reply: "已到达 chair 旁边，还需要什么？",
+    meta: "当前目标：椅子；场景：apt_1；随机种子：3。"
+  }
+};
+
+async function selectDemo(name) {
+  const demo = demos[name];
+
+  const video = document.getElementById("video");
+  video.src = demo.video;
+  video.load();
+
+  document.getElementById("reply").innerText = demo.reply;
+  document.getElementById("meta").innerText = demo.meta;
+
+  try {
+    const response = await fetch(demo.log);
+    document.getElementById("log").innerText = await response.text();
+  } catch (err) {
+    document.getElementById("log").innerText = "日志加载失败：" + err;
+  }
+}
+
+selectDemo("sofa");
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+scene=apt_1
+seed=5
+command=请到沙发旁边
+target=sofa
+
+step=000 state=SEARCH action=turn_left target=sofa visible=False front_depth=2.985538959503174 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=001 state=SEARCH action=turn_left target=sofa visible=False front_depth=2.572232246398926 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=002 state=SEARCH action=turn_left target=sofa visible=False front_depth=2.388035774230957 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=003 state=SEARCH action=turn_left target=sofa visible=False front_depth=2.322852611541748 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=004 state=SEARCH action=turn_left target=sofa visible=False front_depth=2.203752040863037 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=005 state=ALIGN action=turn_left target=sofa visible=True front_depth=2.4836251735687256 target_distance=2.685176372528076 bbox=(0, 351, 78, 471) score=0.2530137598514557 reply=看到 sofa，正在左转对齐。
+step=006 state=SEARCH action=turn_left target=sofa visible=False front_depth=2.9641759395599365 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=007 state=SEARCH action=turn_left target=sofa visible=False front_depth=3.552949905395508 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=008 state=SEARCH action=turn_left target=sofa visible=False front_depth=4.027071952819824 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=009 state=SEARCH action=turn_left target=sofa visible=False front_depth=4.125349521636963 target_distance=None bbox=None score=None reply=正在寻找 sofa ...
+step=010 state=ALIGN action=turn_left target=sofa visible=True front_depth=3.982856512069702 target_distance=3.1273374557495117 bbox=(0, 331, 112, 452) score=0.3110966384410858 reply=看到 sofa，正在左转对齐。
+step=011 state=ALIGN action=turn_left target=sofa visible=True front_depth=5.803917407989502 target_distance=3.251620292663574 bbox=(0, 321, 222, 484) score=0.5571213364601135 reply=看到 sofa，正在左转对齐。
+step=012 state=ALIGN action=turn_left target=sofa visible=True front_depth=5.025275230407715 target_distance=3.5579605102539062 bbox=(88, 322, 357, 447) score=0.5989000797271729 reply=看到 sofa，正在左转对齐。
+step=013 state=APPROACH action=move_forward target=sofa visible=True front_depth=4.479822635650635 target_distance=3.9151015281677246 bbox=(224, 315, 445, 422) score=0.6052032113075256 reply=看到 sofa，正在靠近。
+step=014 state=APPROACH action=move_forward target=sofa visible=True front_depth=4.292867183685303 target_distance=3.6168289184570312 bbox=(207, 319, 458, 439) score=0.5817188620567322 reply=看到 sofa，正在靠近。
+step=015 state=APPROACH action=move_forward target=sofa visible=True front_depth=4.099544048309326 target_distance=3.352660655975342 bbox=(201, 322, 453, 452) score=0.5881153345108032 reply=看到 sofa，正在靠近。
+step=016 state=APPROACH action=move_forward target=sofa visible=True front_depth=3.911176919937134 target_distance=3.072021484375 bbox=(186, 329, 459, 470) score=0.6151353120803833 reply=看到 sofa，正在靠近。
+step=017 state=APPROACH action=move_forward target=sofa visible=True front_depth=3.706153154373169 target_distance=2.852375030517578 bbox=(176, 328, 464, 486) score=0.6354577541351318 reply=看到 sofa，正在靠近。
+step=018 state=APPROACH action=move_forward target=sofa visible=True front_depth=3.493032455444336 target_distance=2.6490328311920166 bbox=(164, 330, 477, 499) score=0.6051287055015564 reply=看到 sofa，正在靠近。
+step=019 state=APPROACH action=move_forward target=sofa visible=True front_depth=3.277472972869873 target_distance=2.367947816848755 bbox=(139, 333, 477, 527) score=0.6324751377105713 reply=看到 sofa，正在靠近。
+step=020 state=APPROACH action=move_forward target=sofa visible=True front_depth=3.0639147758483887 target_distance=2.124741554260254 bbox=(95, 333, 504, 571) score=0.5656761527061462 reply=看到 sofa，正在靠近。
+step=021 state=APPROACH action=move_forward target=sofa visible=True front_depth=2.85713529586792 target_distance=1.8672243356704712 bbox=(44, 341, 498, 575) score=0.5256100296974182 reply=看到 sofa，正在靠近。
+step=022 state=ALIGN action=turn_left target=sofa visible=True front_depth=2.644314765930176 target_distance=1.7388232946395874 bbox=(0, 342, 510, 576) score=0.577093780040741 reply=看到 sofa，正在左转对齐。
+step=023 state=APPROACH action=move_forward target=sofa visible=True front_depth=2.491814136505127 target_distance=1.7795652151107788 bbox=(157, 347, 640, 574) score=0.5918176174163818 reply=看到 sofa，正在靠近。
+step=024 state=APPROACH action=move_forward target=sofa visible=True front_depth=2.2704663276672363 target_distance=1.6270477771759033 bbox=(93, 353, 666, 576) score=0.5326400399208069 reply=看到 sofa，正在靠近。
+step=025 state=STOP action=stop target=sofa visible=True front_depth=2.048870801925659 target_distance=1.490680456161499 bbox=(19, 355, 714, 575) score=0.5163512825965881 reply=已到达 sofa 旁边，还需要什么？
+
+final_reply=已到达 sofa 旁边，还需要什么？
