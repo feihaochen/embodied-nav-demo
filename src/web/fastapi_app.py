@@ -463,3 +463,6 @@ async def api_live(request: Request):
         "log": full_log,
         "status": f"Local Live Run finished: {target}, {width}x{height}",
     }
+
+
+# Robot embodiment note: wheeled dual-arm mobile manipulator, arms fixed for navigation-only task.

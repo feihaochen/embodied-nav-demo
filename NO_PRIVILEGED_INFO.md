@@ -41,3 +41,8 @@
 当前项目聚焦导航任务。机器人被抽象为带 RGB-D 传感器的轮式移动平台；双臂在本导航任务中固定，不参与操作控制。
 
 当前最终展示目标为沙发和椅子。系统接口按多目标方式设计，后续可以通过切换到包含相应物体的场景，继续扩展到床、桌子、厨房台面等目标。
+
+## Robot Embodiment
+
+The robot is represented as a wheeled dual-arm mobile manipulator abstraction.
+The wheeled base is controlled for navigation. The two arms are fixed and not actuated in this navigation-only task.
