@@ -1,5 +1,9 @@
 # Habitat / ReplicaCAD 语言条件 RGB-D 视觉导航机器人
 
+**网页展示链接**：https://feihaochen.github.io/embodied-nav-demo/  
+**GitHub 仓库地址**：https://github.com/feihaochen/embodied-nav-demo
+
+
 本项目实现了一个基于 Habitat / ReplicaCAD 的具身智能导航演示。用户可以输入中文指令，例如“请到沙发旁边”或“请到椅子旁边”，机器人 Agent 会在居家仿真场景中基于第一视角 RGB-D 图像、机器人本体状态和动作反馈，执行目标搜索、方向对齐、靠近目标和停止动作。任务完成后，Agent 会回复：“已到达 xxx 旁边，还需要什么？”
 
 ## 一、项目目标
